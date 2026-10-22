@@ -189,12 +189,12 @@ footer b{color:var(--masthead-ink);font-family:var(--display);font-size:18px;let
    and that page shows the built-in sample content below instead.
    ===================================================================== */
 const SHEET_LINKS = {
-  settings:     "",
-  news:         "",
-  publications: "",
-  officers:     "",
-  alumni:       "",
-  members:      ""
+  settings:     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkZKGNIfzYtoCwApYSpr7caFga5wwE2__vjSAuls0_1uOtuAdwFLsv_IM18INBL1NR8SvfEkt300X/pub?single=true&output=csv&gid=1069353860",
+  news:         "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkZKGNIfzYtoCwApYSpr7caFga5wwE2__vjSAuls0_1uOtuAdwFLsv_IM18INBL1NR8SvfEkt300X/pub?single=true&output=csv&gid=14370587",
+  publications: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkZKGNIfzYtoCwApYSpr7caFga5wwE2__vjSAuls0_1uOtuAdwFLsv_IM18INBL1NR8SvfEkt300X/pub?single=true&output=csv&gid=2059684786",
+  officers:     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkZKGNIfzYtoCwApYSpr7caFga5wwE2__vjSAuls0_1uOtuAdwFLsv_IM18INBL1NR8SvfEkt300X/pub?single=true&output=csv&gid=1914625174",
+  alumni:       "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkZKGNIfzYtoCwApYSpr7caFga5wwE2__vjSAuls0_1uOtuAdwFLsv_IM18INBL1NR8SvfEkt300X/pub?single=true&output=csv&gid=127502463",
+  members:      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkZKGNIfzYtoCwApYSpr7caFga5wwE2__vjSAuls0_1uOtuAdwFLsv_IM18INBL1NR8SvfEkt300X/pub?single=true&output=csv&gid=1166532277"
 };
 const REFRESH_SECONDS = 120;
 
@@ -269,7 +269,7 @@ function toObjects(tab, rows){
     }
   }
   return rows.slice(1).map(r => {
-    const o = {}; for (const f in idx) o[f] = (r[idx[f]]||"").trim(); return o;
+    const o = {}; for (const f in idx) { const v = (r[idx[f]]||"").trim(); o[f] = /^#(N\/A|REF!|VALUE!|NAME\?|ERROR!|DIV\/0!|NUM!|NULL!)$/i.test(v) ? "" : v; } return o;
   }).filter(o => Object.values(o).some(v => v) && !/^example\b/i.test(o.name || o.title || ""));
 }
 async function loadTab(tab){
@@ -296,6 +296,8 @@ const PAGES = [["home","Home"],["officers","Officers"],["members","Members"],["n
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeUrl = u => /^https?:\/\//i.test((u||"").trim()) ? u.trim() : "";
+const looseUrl = u => { u = String(u||"").trim(); if (!u || /\s/.test(u)) return ""; if (safeUrl(u)) return u;
+  return /^(www\.)?[a-z0-9-]+(\.[a-z0-9-]+)+(\/\S*)?$/i.test(u) ? "https://" + u : ""; };
 const initials = n => (n||"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
 const sampleChip = tab => STATE[tab]==="sample" ? ' <span class="chip sample">Sample</span>' : "";
 const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
@@ -331,7 +333,7 @@ function emailRow(e){
 }
 function socials(p){
   const links = [["LinkedIn",p.linkedin],["Instagram",p.instagram],["X",p.x]]
-    .filter(([,u]) => safeUrl(u)).map(([l,u]) => `<a href="${esc(safeUrl(u))}" target="_blank" rel="noopener">${l}</a>`).join("");
+    .filter(([,u]) => looseUrl(u)).map(([l,u]) => `<a href="${esc(looseUrl(u))}" target="_blank" rel="noopener">${l}</a>`).join("");
   return links ? `<div class="socials">${links}</div>` : "";
 }
 function head(eyebrow, title, lede){
@@ -436,7 +438,7 @@ function drawMembers(){
   $("#member-rows").innerHTML = list.length ? list.map(m => `<tr>
       <td><b>${esc(m.name)}</b></td><td class="mono">${esc(m.year)}</td><td>${esc(m.major)}</td>
       <td>${m.email ? emailRow(m.email) : ""}</td>
-      <td>${safeUrl(m.linkedin) ? `<a href="${esc(safeUrl(m.linkedin))}" target="_blank" rel="noopener">Profile</a>` : `<span class="meta">—</span>`}</td></tr>`).join("")
+      <td>${looseUrl(m.linkedin) ? `<a href="${esc(looseUrl(m.linkedin))}" target="_blank" rel="noopener">Profile</a>` : `<span class="meta">—</span>`}</td></tr>`).join("")
     : `<tr><td colspan="5" class="empty">${q ? "No members match that search." : "No members yet. Be the first to join."}</td></tr>`;
 }
 function newsEntry(n){
@@ -466,7 +468,7 @@ function renderPubs(){
          <span class="byline">${esc(p.authors)}${p.d?` · <span class="mono">${esc(p.d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}))}</span>`:""}</span>
          ${p.summary?`<p>${esc(p.summary)}</p>`:""}
        </div>
-       ${safeUrl(p.link) ? `<a class="btn ghost" href="${esc(safeUrl(p.link))}" target="_blank" rel="noopener">Read</a>` : ""}
+       ${looseUrl(p.link) ? `<a class="btn ghost" href="${esc(looseUrl(p.link))}" target="_blank" rel="noopener">Read</a>` : ""}
      </article>`).join("") || `<div class="entry"><p>No publications yet.</p></div>`}</div>`;
   document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => { pubFilter = b.dataset.filter; renderPubs(); }));
 }
