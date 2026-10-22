@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Saint Anselm Finance Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: navy masthead like anselm.edu, then directory-style listings separated by teal rules on a white page. */
+:root{
+  --masthead:#0b2d4f; --masthead-ink:#ffffff; --masthead-dim:#b9c9d9;
+  --ground:#f4f6f8; --paper:#ffffff; --ink:#15283a; --muted:#69757f;
+  --rule:#1d7a8a; --hair:#dde4ea; --accent:#0b2d4f; --accent-ink:#ffffff;
+  --chip:#e8eef3; --chip-ink:#2c4a64; --sample:#9a6b12; --sample-bg:#fbf1dc;
+  --display:"Cormorant Garamond",Garamond,"Times New Roman",serif;
+  --body:"Montserrat","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --masthead:#071a2d; --masthead-ink:#f2f6fa; --masthead-dim:#8fa6bc;
+  --ground:#0c1621; --paper:#122131; --ink:#e4ebf2; --muted:#9aa8b6;
+  --rule:#45adbd; --hair:#24384b; --accent:#7fb4e0; --accent-ink:#071a2d;
+  --chip:#1c3247; --chip-ink:#bcd3e8; --sample:#e2b45c; --sample-bg:#33280f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --masthead:#071a2d; --masthead-ink:#f2f6fa; --masthead-dim:#8fa6bc;
+  --ground:#0c1621; --paper:#122131; --ink:#e4ebf2; --muted:#9aa8b6;
+  --rule:#45adbd; --hair:#24384b; --accent:#7fb4e0; --accent-ink:#071a2d;
+  --chip:#1c3247; --chip-ink:#bcd3e8; --sample:#e2b45c; --sample-bg:#33280f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--rule);outline-offset:2px}
+
+/* Masthead */
+.mast{background:var(--masthead);color:var(--masthead-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.mast-in{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:18px 0;display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;text-decoration:none;color:inherit}
+.brand b{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,34px);letter-spacing:.06em;text-transform:uppercase;line-height:1}
+.brand span{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--masthead-dim)}
+nav{overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav ul{list-style:none;margin:0;padding:0;display:flex;gap:4px;white-space:nowrap}
+nav a{display:block;padding:10px 14px 12px;color:var(--masthead-dim);text-decoration:none;font-weight:600;font-size:14px;border-bottom:3px solid transparent}
+nav a:hover{color:var(--masthead-ink)}
+nav a[aria-current="page"]{color:var(--masthead-ink);border-bottom-color:var(--rule)}
+
+/* Page shell */
+main{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 64px}
+.page-head{display:flex;flex-direction:column;gap:6px;margin-bottom:28px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--rule)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,5vw,48px);line-height:1.05;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:26px;margin:0;line-height:1.15;text-wrap:balance}
+.lede{color:var(--muted);max-width:62ch;margin:4px 0 0}
+.sample-note{display:inline-flex;align-items:center;gap:8px;background:var(--sample-bg);color:var(--sample);font-size:12px;font-weight:600;padding:6px 12px;border-radius:4px;margin-top:10px;align-self:flex-start}
+.chip{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--chip);color:var(--chip-ink);padding:3px 9px;border-radius:3px}
+.chip.sample{background:var(--sample-bg);color:var(--sample)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* Directory-style list */
+.listing{border-top:2px solid var(--rule)}
+.entry{padding-block:24px;border-bottom:1px solid var(--rule);display:grid;gap:6px}
+.entry .cat{font-size:13px;color:var(--muted)}
+.entry h3{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:0;color:var(--ink)}
+.entry p{margin:0;color:var(--muted);max-width:68ch}
+
+/* Home */
+.home-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:40px;align-items:start}
+.home-grid>*{min-width:0}
+.panel{background:var(--paper);border:1px solid var(--hair);padding:24px;display:flex;flex-direction:column;gap:12px}
+.panel .when{font-family:var(--mono);font-size:13px;color:var(--rule)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);font-family:var(--body);font-weight:600;font-size:14px;padding:11px 18px;border:0;border-radius:3px;text-decoration:none;cursor:pointer;align-self:flex-start}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:28px}
+.quick a{background:var(--paper);padding:18px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.quick a b{font-family:var(--display);font-size:22px;font-weight:600}
+.quick a span{font-size:13px;color:var(--muted)}
+.quick a:hover b{color:var(--rule)}
+
+/* People cards */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:24px}
+.person{background:var(--paper);border:1px solid var(--hair);display:flex;flex-direction:column}
+.shot{aspect-ratio:4/5;max-width:100%;background:var(--masthead);display:grid;place-items:center;overflow:hidden}
+.shot img{width:100%;height:100%;object-fit:cover}
+.shot .mono-init{font-family:var(--display);font-size:64px;font-weight:600;color:var(--masthead-dim);letter-spacing:.04em}
+.person-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.role{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--rule)}
+.person h3{font-family:var(--display);font-size:24px;font-weight:600;margin:0;line-height:1.15}
+.meta{font-size:13px;color:var(--muted)}
+.bio{font-size:14px;margin:0}
+.contact{margin-top:auto;padding-top:12px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:8px}
+.email-row{display:flex;align-items:center;gap:8px;min-width:0}
+.email-row code{font-family:var(--mono);font-size:12.5px;overflow-wrap:anywhere;user-select:all}
+.copy{font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;background:none;border:1px solid var(--hair);color:var(--muted);padding:3px 8px;border-radius:3px;cursor:pointer;flex-shrink:0}
+.copy:hover{color:var(--ink);border-color:var(--muted)}
+.socials{display:flex;gap:6px;flex-wrap:wrap}
+.socials a{font-size:12px;font-weight:600;text-decoration:none;border:1px solid var(--hair);padding:4px 10px;border-radius:3px;color:var(--ink)}
+.socials a:hover{border-color:var(--rule);color:var(--rule)}
+
+/* Members */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.toolbar input{font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);border-radius:3px;width:min(320px,100%)}
+.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.live{background:#2e9d5b}
+.table-wrap{overflow-x:auto;background:var(--paper);border:1px solid var(--hair)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+th{text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:12px 16px;border-bottom:2px solid var(--rule);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--hair);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.mono{font-size:12.5px}
+.empty{padding:28px 16px;color:var(--muted);text-align:center}
+
+/* News */
+.news .entry{grid-template-columns:120px minmax(0,1fr);column-gap:28px}
+.datebox{display:flex;flex-direction:column;line-height:1.1}
+.datebox .m{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--rule)}
+.datebox .d{font-family:var(--display);font-size:44px;font-weight:600}
+.datebox .w{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.news .body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.where{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.section-label{font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:40px 0 0}
+
+/* Publications */
+.pubs .entry{grid-template-columns:minmax(0,1fr) auto;column-gap:24px;align-items:start}
+.pubs h3{font-family:var(--display);font-size:24px;letter-spacing:0;text-transform:none;line-height:1.2}
+.pubs .byline{font-size:13px;color:var(--muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filters button{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;border:1px solid var(--hair);background:var(--paper);color:var(--muted);border-radius:3px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* Alumni */
+.alumni .entry{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1.1fr);column-gap:28px;align-items:start}
+.alumni .name{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.2}
+.alumni .work b{display:block;font-weight:600}
+
+footer{background:var(--masthead);color:var(--masthead-dim);font-size:13px}
+.foot-in{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
+footer .socials a{color:var(--masthead-ink);border-color:var(--masthead-dim)}
+footer code{color:var(--masthead-ink)}
+footer .copy{color:var(--masthead-dim);border-color:var(--masthead-dim)}
+footer b{color:var(--masthead-ink);font-family:var(--display);font-size:18px;letter-spacing:.06em;text-transform:uppercase}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:3px;font-size:13px;font-weight:600;z-index:10}
+
+@media (max-width:760px){
+  .home-grid{grid-template-columns:minmax(0,1fr)}
+  .news .entry{grid-template-columns:72px minmax(0,1fr);column-gap:16px}
+  .datebox .d{font-size:34px}
+  .pubs .entry,.alumni .entry{grid-template-columns:minmax(0,1fr);row-gap:8px}
+  main{padding-block:28px 48px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-in">
+    <a class="brand" href="#home"><b>Finance Club</b><span>Saint Anselm College</span></a>
+    <nav aria-label="Site"><ul id="nav"></ul></nav>
+  </div>
+</header>
+
+<main id="main">
+  <section id="page-home" data-page></section>
+  <section id="page-officers" data-page hidden></section>
+  <section id="page-members" data-page hidden></section>
+  <section id="page-news" data-page hidden></section>
+  <section id="page-publications" data-page hidden></section>
+  <section id="page-alumni" data-page hidden></section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>Finance Club</b><div>Academic/Educational · Saint Anselm College, Manchester, NH</div></div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start" id="foot-contact"></div>
+  </div>
+</footer>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* =====================================================================
+   SHEET LINKS: paste the six "Publish to web" CSV links from the
+   Finance Club Website Google Sheet here (one per tab). Leave a link ""
+   and that page shows the built-in sample content below instead.
+   ===================================================================== */
+const SHEET_LINKS = {
+  settings:     "",
+  news:         "",
+  publications: "",
+  officers:     "",
+  alumni:       "",
+  members:      ""
+};
+const REFRESH_SECONDS = 120;
+
+/* Sample content, shown only for tabs with no link yet (tagged SAMPLE). */
+const SAMPLE = {
+  settings: [
+    {setting:"About", value:"The Finance Club is for students interested in every area of finance in the modern world: markets, corporate finance, banking, and personal finance. We host speakers from the industry, run investment pitches and stock competitions, and help members prepare for internships and careers."},
+    {setting:"Club Email", value:"clubfinance@anselm.edu"}
+  ],
+  news: [
+    {date:"2026-10-14", time:"7:00 PM", title:"General meeting: earnings season preview", type:"Meeting", location:"Location TBD", description:"How to read a 10-Q and what to watch in big-bank earnings. Open to all majors."},
+    {date:"2026-10-28", time:"6:30 PM", title:"Speaker night: alumnus in investment banking", type:"Speaker", location:"Location TBD", description:"The analyst role, recruiting timelines, and preparing for technical interviews."},
+    {date:"2026-11-11", time:"7:00 PM", title:"Stock pitch competition kickoff", type:"Competition", location:"Location TBD", description:"Form teams of two or three and pick a company. Final pitches are judged in December."},
+    {date:"2026-09-23", time:"7:00 PM", title:"Fall welcome meeting", type:"Meeting", location:"Location TBD", description:"Introduced this semester's officers and calendar."}
+  ],
+  publications: [
+    {title:"Equity research on a regional bank", type:"Research", authors:"Finance Club members", date:"2026-09-30", summary:"Net interest margin, deposit costs, and valuation versus peers.", link:""},
+    {title:"Recap of the fall welcome meeting", type:"Event Recap", authors:"Club officers", date:"2026-09-24", summary:"Highlights from the first meeting and what's ahead this semester.", link:""}
+  ],
+  officers: [
+    {name:"Jackson", role:"President", year:"2028", major:"Finance", bio:"Leads the club's meetings, speaker series, and partnerships.", email:"clubfinance@anselm.edu"},
+    {name:"Vice President", role:"Vice President", year:"20XX", major:"Major", bio:"One or two sentences about this officer."},
+    {name:"Treasurer", role:"Treasurer", year:"20XX", major:"Major", bio:"One or two sentences about this officer."}
+  ],
+  alumni: [
+    {name:"Alumnus Name", year:"20XX", employer:"Company", jobtitle:"Job title", city:"City, ST"}
+  ],
+  members: [
+    {name:"Sample Member", year:"2027", major:"Finance", email:"student1@anselm.edu"},
+    {name:"Sample Member", year:"2028", major:"Economics", email:"student2@anselm.edu"},
+    {name:"Sample Member", year:"2029", major:"Accounting", email:"student3@anselm.edu"}
+  ]
+};
+
+/* Which sheet headers map to which fields (matched loosely, case-insensitive). */
+const FIELDS = {
+  settings:     {setting:["setting"], value:["value"]},
+  news:         {date:["date"], time:["time"], title:["title"], type:["type"], location:["location","where"], description:["description","details"]},
+  publications: {title:["title"], type:["type"], authors:["author"], date:["date"], summary:["summary","description"], link:["link","url"]},
+  officers:     {name:["name"], role:["role","position"], year:["year","class"], major:["major"], bio:["bio","about"], email:["email"], linkedin:["linkedin"], instagram:["instagram"], x:["twitter","x"], photo:["photo","headshot","image"]},
+  alumni:       {name:["name"], year:["year","class"], employer:["employer","company","workplace"], jobtitle:["jobtitle","title","position","role"], city:["city","location"], email:["email"], linkedin:["linkedin"], instagram:["instagram"], x:["twitter","x"]},
+  members:      {name:["name"], year:["year","class"], major:["major"], email:["email"], linkedin:["linkedin"]}
+};
+
+/* ============================ data loading ============================ */
+const DATA = {}, STATE = {}; // STATE[tab] = "sample" | "live" | "error"
+for (const k in SAMPLE) { DATA[k] = SAMPLE[k]; STATE[k] = SHEET_LINKS[k] ? "loading" : "sample"; }
+
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=""; }
+    else f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim()!==""));
+}
+const norm = s => String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+function toObjects(tab, rows){
+  if(!rows.length) return [];
+  const heads = rows[0].map(norm), used = new Set(), idx = {};
+  // exact header matches first, then partial matches, never reusing a column
+  for (const pass of ["exact","partial"]) {
+    for (const [field, keys] of Object.entries(FIELDS[tab])) {
+      if (idx[field] !== undefined) continue;
+      const i = heads.findIndex((h,j) => !used.has(j) && keys.some(k => pass==="exact" ? h===k : (k.length>2 && h.includes(k))));
+      if (i >= 0) { idx[field] = i; used.add(i); }
+    }
+  }
+  return rows.slice(1).map(r => {
+    const o = {}; for (const f in idx) o[f] = (r[idx[f]]||"").trim(); return o;
+  }).filter(o => Object.values(o).some(v => v) && !/^example\b/i.test(o.name || o.title || ""));
+}
+async function loadTab(tab){
+  const url = safeUrl(SHEET_LINKS[tab]);
+  if(!url) return;
+  try{
+    const r = await fetch(url + (url.includes("?")?"&":"?") + "t=" + Date.now(), {cache:"no-store"});
+    if(!r.ok) throw new Error(r.status);
+    DATA[tab] = toObjects(tab, parseCSV(await r.text()));
+    STATE[tab] = "live";
+  }catch(e){
+    if (STATE[tab] !== "live") { DATA[tab] = []; STATE[tab] = "error"; } // keep last good copy on a hiccup
+  }
+}
+async function loadAll(){
+  await Promise.all(Object.keys(SHEET_LINKS).map(loadTab));
+  lastLoaded = new Date();
+  renderAll();
+}
+let lastLoaded = null;
+
+/* ============================ helpers ============================ */
+const PAGES = [["home","Home"],["officers","Officers"],["members","Members"],["news","News & Events"],["publications","Publications"],["alumni","Alumni"]];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl = u => /^https?:\/\//i.test((u||"").trim()) ? u.trim() : "";
+const initials = n => (n||"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+const sampleChip = tab => STATE[tab]==="sample" ? ' <span class="chip sample">Sample</span>' : "";
+const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const MONTHS = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+
+function parseDate(s){
+  s = String(s||"").trim(); let m;
+  if ((m = s.match(/^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?/))) return new Date(+m[1], +m[2]-1, +(m[3]||1));
+  if ((m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/))) return new Date(+m[3] < 100 ? 2000 + +m[3] : +m[3], +m[1]-1, +m[2]);
+  if ((m = s.match(/^([a-z]{3})[a-z]*\.?\s+(\d{1,2})?,?\s*(\d{4})$/i)) && MONTHS.includes(m[1].toLowerCase()))
+    return new Date(+m[3], MONTHS.indexOf(m[1].toLowerCase()), +(m[2]||1));
+  const t = Date.parse(s); return isNaN(t) ? null : new Date(t);
+}
+function fmtTime(s){
+  s = String(s||"").trim(); const m = s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/); // 24h "19:00:00"
+  if(!m) return s;
+  const h = +m[1]; return `${h%12||12}:${m[2]} ${h<12?"AM":"PM"}`;
+}
+function settings(){
+  const o = {}; for (const r of DATA.settings) o[norm(r.setting)] = r.value || ""; return o;
+}
+function photoSrc(p){
+  p = String(p||"").trim(); if(!p) return "";
+  const drive = p.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/);
+  if (drive) return `https://drive.google.com/thumbnail?id=${drive[1]}&sz=w800`;
+  if (safeUrl(p)) return p;
+  if (/^[\w\-./ ]+\.(jpe?g|png|webp|gif)$/i.test(p) && !p.includes("..")) return encodeURI(p);
+  return "";
+}
+function emailRow(e){
+  if(!e) return "";
+  return `<div class="email-row"><code>${esc(e)}</code><button class="copy" type="button" data-copy="${esc(e)}">Copy</button></div>`;
+}
+function socials(p){
+  const links = [["LinkedIn",p.linkedin],["Instagram",p.instagram],["X",p.x]]
+    .filter(([,u]) => safeUrl(u)).map(([l,u]) => `<a href="${esc(safeUrl(u))}" target="_blank" rel="noopener">${l}</a>`).join("");
+  return links ? `<div class="socials">${links}</div>` : "";
+}
+function head(eyebrow, title, lede){
+  return `<div class="page-head"><span class="eyebrow">${esc(eyebrow)}</span><h1>${esc(title)}</h1>${lede?`<p class="lede">${esc(lede)}</p>`:""}</div>`;
+}
+function loadNote(tab, what){
+  if (STATE[tab]==="error") return `<span class="sample-note">Couldn't load ${what} right now. Try refreshing in a minute.</span><div style="height:14px"></div>`;
+  if (STATE[tab]==="loading") return `<p class="meta">Loading ${what}…</p>`;
+  return "";
+}
+function joinButton(label="Join the club"){
+  const u = safeUrl(settings().joinformlink);
+  return u ? `<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">${label}</a>`
+           : `<span class="btn" aria-disabled="true" title="Sign-up form link coming soon">${label}</span>`;
+}
+function sortedNews(){
+  const t = today();
+  const rows = DATA.news.map(n => ({...n, d: parseDate(n.date)})).filter(n => n.d && n.title);
+  return {
+    up: rows.filter(n => n.d >= t).sort((a,b) => a.d - b.d),
+    past: rows.filter(n => n.d < t).sort((a,b) => b.d - a.d)
+  };
+}
+
+/* ============================ pages ============================ */
+function renderNav(){
+  $("#nav").innerHTML = PAGES.map(([id,l]) => `<li><a href="#${id}" data-nav="${id}">${l}</a></li>`).join("");
+}
+function renderHome(){
+  const s = settings(), next = sortedNews().up[0];
+  const clubSocials = socials({instagram:s.clubinstagram, linkedin:s.clublinkedin});
+  $("#page-home").innerHTML = `
+    <div class="home-grid">
+      <div>
+        ${head("Academic/Educational club","Finance at Saint Anselm", s.about || "")}
+        <div style="display:flex;gap:10px;flex-wrap:wrap">${joinButton()}<a class="btn ghost" href="#news">See upcoming events</a></div>
+        <div class="quick">
+          <a href="#officers"><b>Officers</b><span>Who runs the club</span></a>
+          <a href="#members"><b>Members</b><span>Current member list</span></a>
+          <a href="#publications"><b>Publications</b><span>Research, projects, recaps</span></a>
+          <a href="#alumni"><b>Alumni</b><span>Where members went next</span></a>
+        </div>
+      </div>
+      <aside class="panel" aria-label="Next event">
+        <span class="eyebrow">Next up</span>
+        ${next ? `
+          <span class="when">${esc(next.d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}))}${next.time?` · ${esc(fmtTime(next.time))}`:""}</span>
+          <h2>${esc(next.title)}${sampleChip("news")}</h2>
+          ${next.location?`<span class="where">${esc(next.location)}</span>`:""}
+          <p style="margin:0;color:var(--muted)">${esc(next.description)}</p>
+          <a href="#news" style="font-weight:600;font-size:14px">All events →</a>`
+        : `<h2>No events scheduled yet</h2><p style="margin:0;color:var(--muted)">Check back soon, or email the club.</p>`}
+        <div class="contact"><span class="meta">Questions? Email the club</span>${emailRow(s.clubemail)}${clubSocials}</div>
+      </aside>
+    </div>`;
+  $("#foot-contact").innerHTML = emailRow(s.clubemail) + clubSocials;
+}
+function renderOfficers(){
+  const cards = DATA.officers.filter(o => o.name).map(o => {
+    const src = photoSrc(o.photo), ini = esc(initials(STATE.officers==="sample" ? o.role : o.name));
+    return `<article class="person">
+      <div class="shot">${src ? `<img src="${esc(src)}" alt="Headshot of ${esc(o.name)}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono-init',textContent:'${ini}'}))">` : `<span class="mono-init" aria-hidden="true">${ini}</span>`}</div>
+      <div class="person-body">
+        <span class="role">${esc(o.role)}</span>
+        <h3>${esc(o.name)}${sampleChip("officers")}</h3>
+        <span class="meta">${esc([o.year && (/^\d{4}$/.test(o.year) ? "Class of "+o.year : o.year), o.major].filter(Boolean).join(" · "))}</span>
+        ${o.bio?`<p class="bio">${esc(o.bio)}</p>`:""}
+        ${(o.email||socials(o)) ? `<div class="contact">${emailRow(o.email)}${socials(o)}</div>` : ""}
+      </div>
+    </article>`;
+  }).join("");
+  $("#page-officers").innerHTML = head("Leadership","Club Officers","The students who plan meetings, bring in speakers, and run club projects this year.")
+    + loadNote("officers","officers") + `<div class="people">${cards}</div>`;
+}
+function renderMembers(){
+  if (!$("#member-rows")) {
+    $("#page-members").innerHTML = head("Roster","Current Members","Everyone who has signed up this year. New sign-ups appear here automatically.") + `
+      <div class="toolbar">
+        <input id="member-search" type="search" placeholder="Search by name or major" aria-label="Search members">
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span class="status" id="member-status"></span><span id="member-join"></span></div>
+      </div>
+      <div id="member-note"></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Name</th><th>Class</th><th>Major</th><th>Email</th><th>LinkedIn</th></tr></thead>
+        <tbody id="member-rows"></tbody>
+      </table></div>`;
+    $("#member-search").addEventListener("input", drawMembers);
+  }
+  $("#member-join").innerHTML = joinButton("Join / add your info");
+  drawMembers();
+}
+function drawMembers(){
+  const q = ($("#member-search").value || "").toLowerCase();
+  const all = DATA.members.filter(m => m.name).sort((a,b) => a.name.localeCompare(b.name));
+  const list = all.filter(m => (m.name+" "+(m.major||"")).toLowerCase().includes(q));
+  const st = STATE.members;
+  $("#member-note").innerHTML = st==="sample"
+    ? `<span class="sample-note">Sample rows. The live list appears once the club's sign-up sheet is connected.</span><div style="height:14px"></div>` : loadNote("members","the member list");
+  $("#member-status").innerHTML = st==="live"
+    ? `<span class="dot live"></span>${all.length} member${all.length===1?"":"s"} · updated ${lastLoaded.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}`
+    : st==="sample" ? `<span class="dot"></span>${all.length} sample rows` : "";
+  $("#member-rows").innerHTML = list.length ? list.map(m => `<tr>
+      <td><b>${esc(m.name)}</b></td><td class="mono">${esc(m.year)}</td><td>${esc(m.major)}</td>
+      <td>${m.email ? emailRow(m.email) : ""}</td>
+      <td>${safeUrl(m.linkedin) ? `<a href="${esc(safeUrl(m.linkedin))}" target="_blank" rel="noopener">Profile</a>` : `<span class="meta">—</span>`}</td></tr>`).join("")
+    : `<tr><td colspan="5" class="empty">${q ? "No members match that search." : "No members yet. Be the first to join."}</td></tr>`;
+}
+function newsEntry(n){
+  return `<article class="entry">
+    <div class="datebox"><span class="m">${n.d.toLocaleDateString("en-US",{month:"short"})}</span><span class="d">${n.d.getDate()}</span><span class="w">${n.d.toLocaleDateString("en-US",{weekday:"short"})} ${esc(fmtTime(n.time))}</span></div>
+    <div class="body"><span>${n.type?`<span class="chip">${esc(n.type)}</span>`:""}${sampleChip("news")}</span><h2>${esc(n.title)}</h2>${n.location?`<span class="where">${esc(n.location)}</span>`:""}${n.description?`<p style="margin:0;color:var(--muted)">${esc(n.description)}</p>`:""}</div>
+  </article>`;
+}
+function renderNews(){
+  const {up, past} = sortedNews();
+  $("#page-news").innerHTML = head("Calendar","News & Events","Upcoming meetings, speakers, and competitions.") + loadNote("news","events") +
+    `<div class="listing news">${up.length ? up.map(newsEntry).join("") : `<div class="entry"><p>Nothing scheduled yet. Check back soon.</p></div>`}</div>` +
+    (past.length ? `<p class="section-label">Past events</p><div class="listing news">${past.map(newsEntry).join("")}</div>` : "");
+}
+let pubFilter = "All";
+function renderPubs(){
+  const pubs = DATA.publications.filter(p => p.title).map(p => ({...p, d: parseDate(p.date)}));
+  const types = ["All", ...new Set(pubs.map(p=>p.type).filter(Boolean))];
+  if (!types.includes(pubFilter)) pubFilter = "All";
+  const list = pubs.filter(p => pubFilter==="All" || p.type===pubFilter).sort((a,b)=>(b.d||0)-(a.d||0));
+  $("#page-publications").innerHTML = head("Club work","Publications","Research reports, papers, projects, and event recaps written by club members.") + loadNote("publications","publications") +
+    `<div class="filters" role="group" aria-label="Filter by type">${types.map(t=>`<button type="button" data-filter="${esc(t)}" aria-pressed="${t===pubFilter}">${esc(t)}</button>`).join("")}</div>
+     <div class="listing pubs">${list.map(p => `<article class="entry">
+       <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+         <span>${p.type?`<span class="chip">${esc(p.type)}</span>`:""}${sampleChip("publications")}</span>
+         <h3>${esc(p.title)}</h3>
+         <span class="byline">${esc(p.authors)}${p.d?` · <span class="mono">${esc(p.d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}))}</span>`:""}</span>
+         ${p.summary?`<p>${esc(p.summary)}</p>`:""}
+       </div>
+       ${safeUrl(p.link) ? `<a class="btn ghost" href="${esc(safeUrl(p.link))}" target="_blank" rel="noopener">Read</a>` : ""}
+     </article>`).join("") || `<div class="entry"><p>No publications yet.</p></div>`}</div>`;
+  document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => { pubFilter = b.dataset.filter; renderPubs(); }));
+}
+function renderAlumni(){
+  const list = DATA.alumni.filter(a => a.name);
+  $("#page-alumni").innerHTML = head("Network","Alumni","Former members and where they work now. Alumni are happy to hear from current students.") + loadNote("alumni","alumni") +
+    `<div class="listing alumni">${list.map(a => `<article class="entry">
+      <div><div class="name">${esc(a.name)}${sampleChip("alumni")}</div>${a.year?`<span class="meta">${esc(/^\d{4}$/.test(a.year)?"Class of "+a.year:a.year)}</span>`:""}</div>
+      <div class="work"><b>${esc(a.employer)}</b><span class="meta">${esc([a.jobtitle,a.city].filter(Boolean).join(" · "))}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;min-width:0">${emailRow(a.email)}${socials(a)}</div>
+    </article>`).join("") || `<div class="entry"><p>Alumni coming soon.</p></div>`}</div>`;
+}
+function renderAll(){ renderHome(); renderOfficers(); renderMembers(); renderNews(); renderPubs(); renderAlumni(); }
+
+/* ---------- routing, copy ---------- */
+function show(){
+  const id = (location.hash || "#home").slice(1);
+  const page = PAGES.some(([p]) => p===id) ? id : "home";
+  document.querySelectorAll("[data-page]").forEach(s => s.hidden = s.id !== "page-"+page);
+  document.querySelectorAll("[data-nav]").forEach(a => {
+    if(a.dataset.nav===page) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+  });
+  document.title = page==="home" ? "Saint Anselm Finance Club" : PAGES.find(([p])=>p===page)[1] + " · Saint Anselm Finance Club";
+  window.scrollTo(0,0);
+}
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(()=>t.hidden=true,1600); }
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-copy]"); if(!b) return;
+  try{ await navigator.clipboard.writeText(b.dataset.copy); toast("Email copied"); }
+  catch{ const code = b.parentElement.querySelector("code"); if(code){ const r=document.createRange(); r.selectNodeContents(code); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected. Press Ctrl+C to copy"); } }
+});
+
+renderNav(); renderAll();
+window.addEventListener("hashchange", show); show();
+if (Object.values(SHEET_LINKS).some(Boolean)) { loadAll(); setInterval(loadAll, REFRESH_SECONDS*1000); }
+</script>
+</body>
+</html>
